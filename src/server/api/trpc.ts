@@ -18,7 +18,7 @@ import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
 
 import { prisma } from "~/server/db";
 
-type CreateContextOptions = Record<string, never>;
+type CreateContextOptions = Record<string, string>;
 
 /**
  * This helper generates the "internals" for a tRPC context. If you need to use it, you can export
@@ -32,6 +32,7 @@ type CreateContextOptions = Record<string, never>;
  */
 const createInnerTRPCContext = (_opts: CreateContextOptions) => {
   return {
+    spotifyAccessToken: _opts?.spotifyAccessToken ?? "",
     prisma,
   };
 };
@@ -42,8 +43,10 @@ const createInnerTRPCContext = (_opts: CreateContextOptions) => {
  *
  * @see https://trpc.io/docs/context
  */
-export const createTRPCContext = (_opts: CreateNextContextOptions) => {
-  return createInnerTRPCContext({});
+export const createTRPCContext = async (_opts: CreateNextContextOptions) => {
+  const spotifyAccessToken = await getAccessToken(_opts.req);
+
+  return createInnerTRPCContext({ spotifyAccessToken });
 };
 
 /**
@@ -56,6 +59,7 @@ export const createTRPCContext = (_opts: CreateNextContextOptions) => {
 import { initTRPC } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
+import { getAccessToken } from "~/utils/spotify";
 
 const t = initTRPC.context<typeof createTRPCContext>().create({
   transformer: superjson,
