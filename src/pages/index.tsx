@@ -15,22 +15,30 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       {!user.isSignedIn ? (
-        <SignIn />
+        <div className="flex h-screen w-screen items-center justify-center">
+          <SignIn />
+        </div>
       ) : (
-        <div>
-          <nav className="flex justify-end">
-            <div className="self-start">Song2Image</div>
-            <Link href="/imagine">Create new</Link>
+        <div className="grid grid-cols-8">
+          <nav className="col-start-1 col-end-9 flex w-full items-center justify-end gap-5 bg-purple-900 p-7">
+            <h1 className="mr-auto cursor-pointer text-2xl font-extrabold text-white">
+              🪩Song2Image
+            </h1>
+            <Link
+              href="/imagine"
+              className="rounded-3xl bg-green-500 px-3 py-2 font-semibold text-white"
+            >
+              Create new
+            </Link>
             <UserButton />
           </nav>
-          <main>
-            <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
-              Convert a song into an{" "}
-              <span className="text-[hsl(280,100%,70%)]">image</span>!
+          <main className="col-start-2 col-end-8">
+            <h1 className="text-5xl font-extrabold tracking-tight text-black sm:text-[5rem]">
+              Convert a song into an image!
             </h1>
             <div className="grid grid-cols-4 grid-rows-4 gap-5">
               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((item) => (
-                <button key={item}>Image</button>
+                <button key={item} className="w-40 h-40 border border-black">Image</button>
               ))}
             </div>
           </main>
