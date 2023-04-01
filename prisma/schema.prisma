@@ -6,12 +6,38 @@ generator client {
 }
 
 datasource db {
-    provider = "sqlite"
-    url      = env("DATABASE_URL")
+    provider     = "mysql"
+    url          = env("DATABASE_URL")
+    relationMode = "prisma"
 }
 
-model Example {
+model Post {
     id        String   @id @default(cuid())
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+    image     String
+    prompt    String
+    songId    String
+    song      Song     @relation(fields: [songId], references: [id])
+    userId    String
+    User      User     @relation(fields: [userId], references: [id])
+
+    @@index([songId])
+    @@index([userId])
+}
+
+model Song {
+    id            String   @id @default(cuid())
+    createdAt     DateTime @default(now())
+    spotifySongId String
+    songName      String
+    lyrics        String
+    previewUrl    String
+    songUri       String
+    Post          Post[]
+}
+
+model User {
+    id    String @id
+    posts Post[]
 }
