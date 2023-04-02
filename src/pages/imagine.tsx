@@ -5,6 +5,8 @@ import { api } from "~/utils/api";
 
 const Imagine: NextPage = () => {
   const { mutate, data } = api.spotify.getTrack.useMutation();
+  const { mutate: mutatePost, data: dataPost } =
+    api.post.createPost.useMutation();
 
   function getTrack(e: SyntheticEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -16,6 +18,17 @@ const Imagine: NextPage = () => {
     const songId = songUrl.pathname.split("/")[2] || "";
 
     mutate({ songId });
+  }
+
+  function createPost() {
+    const songId = data?.id;
+    const songName = data?.name;
+    const songUri = data?.uri;
+    const previewUrl = data?.preview_url;
+
+    if (songId && songName && songUri && previewUrl) {
+      mutatePost({ songName, songUri, previewUrl, songId });
+    }
   }
 
   return (
@@ -41,13 +54,15 @@ const Imagine: NextPage = () => {
             placeholder="spotify song url"
           />
           <button
-            className="rounded-2xl bg-green-500 px-3 py-2 font-semibold text-white min-w-[150px]"
+            className="min-w-[150px] rounded-2xl bg-green-500 px-3 py-2 font-semibold text-white"
             type="submit"
           >
             Search
           </button>
         </form>
         <pre>{JSON.stringify(data, null, 2)}</pre>
+        <button onClick={createPost}>Generate</button>
+        <pre>{JSON.stringify(dataPost, null, 2)}</pre>
       </main>
     </div>
   );

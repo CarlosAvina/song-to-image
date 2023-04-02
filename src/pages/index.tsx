@@ -9,10 +9,8 @@ import { api } from "~/utils/api";
 const Home: NextPage = () => {
   const { user, isSignedIn } = useUser();
 
-  const { data: isNewUser } = api.user.createUser.useQuery({
-    username: user?.fullName,
-    profileImage: user?.profileImageUrl,
-  });
+  const { data: isNewUser } = api.user.createUser.useQuery();
+  const { data: postsData } = api.post.getAllPosts.useQuery();
 
   return (
     <>
@@ -45,9 +43,9 @@ const Home: NextPage = () => {
               Convert a song into an image!
             </h1>
             <div className="grid grid-cols-4 grid-rows-4 gap-5">
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((item) => (
-                <button key={item} className="h-40 w-40 border border-black">
-                  Image
+              {postsData?.posts.map((post) => (
+                <button key={post.id} className="h-40 w-40 border border-black">
+                  {post.prompt}
                 </button>
               ))}
             </div>

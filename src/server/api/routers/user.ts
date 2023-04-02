@@ -1,29 +1,24 @@
-import { z } from "zod";
+import { TRPCError } from "@trpc/server";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
 export const userRouter = createTRPCRouter({
-  createUser: publicProcedure
-    .input(
-      z.object({
-        username: z.string().optional().nullable(),
-        profileImage: z.string().optional(),
-      })
-    )
-    .query(async ({ input, ctx }) => {
-      const { username, profileImage } = input;
-      const { prisma, userId } = ctx;
+  createUser: publicProcedure.query(async ({ ctx }) => {
+    const { prisma, userId } = ctx;
 
-      let user;
-      if (userId && username && profileImage) {
-        user = await prisma.user.findUnique({ where: { id: userId } });
-        if (!user) {
-          await prisma.user.create({
-            data: { id: userId, username, profileImage },
-          });
-        }
-      }
+    if (!userId) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "An unexpected error occurred, please try again later.",
+      });
+    }
 
-      return Boolean(user);
-    }),
+    const user = await prisma.user.upsert({
+      create: { id: userId },
+      update: { id: userId },
+      where: { id: userId },
+    });
+
+    return Boolean(user);
+  }),
 });

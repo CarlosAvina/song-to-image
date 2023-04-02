@@ -27,14 +27,13 @@ model Post {
 }
 
 model Song {
-    id            String   @id @default(cuid())
-    createdAt     DateTime @default(now())
-    spotifySongId String
-    songName      String
-    lyrics        String
-    previewUrl    String
-    songUri       String
-    Post          Post[]
+    id         String   @id
+    createdAt  DateTime @default(now())
+    songName   String
+    lyrics     String?
+    previewUrl String
+    songUri    String
+    Post       Post[]
 }
 
 model User {

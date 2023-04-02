@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import type { GetTrackResponseType } from "~/server/api/types";
 
 export const spotifyRouter = createTRPCRouter({
   getTrack: publicProcedure
@@ -10,13 +11,13 @@ export const spotifyRouter = createTRPCRouter({
         `https://api.spotify.com/v1/tracks/${input.songId}`,
         {
           headers: {
-            Authorization: `Bearer ${ctx.spotifyAccessToken}`,
+            Authorization: `Bearer ${ctx.spotifyAccessToken ?? ""}`,
           },
         }
       );
 
-      const json = (await res.json()) as object;
+      const data = (await res.json()) as GetTrackResponseType;
 
-      return json;
+      return data;
     }),
 });
