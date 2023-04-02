@@ -37,6 +37,8 @@ model Song {
 }
 
 model User {
-    id    String @id
-    posts Post[]
+    id        String @id
+    username  String
+    userImage String
+    posts     Post[]
 }

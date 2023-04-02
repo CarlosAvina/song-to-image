@@ -4,9 +4,16 @@ import type { SyntheticEvent } from "react";
 import { api } from "~/utils/api";
 
 const Imagine: NextPage = () => {
-  const { mutate, data } = api.spotify.getTrack.useMutation();
-  const { mutate: mutatePost, data: dataPost } =
-    api.post.createPost.useMutation();
+  const {
+    mutate,
+    data,
+    isLoading: gettingTrack,
+  } = api.spotify.getTrack.useMutation();
+  const {
+    mutate: mutatePost,
+    data: dataPost,
+    isLoading: isGeneratingImage,
+  } = api.post.createPost.useMutation();
 
   function getTrack(e: SyntheticEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -60,9 +67,21 @@ const Imagine: NextPage = () => {
             Search
           </button>
         </form>
-        <pre>{JSON.stringify(data, null, 2)}</pre>
-        <button onClick={createPost}>Generate</button>
-        <pre>{JSON.stringify(dataPost, null, 2)}</pre>
+        {gettingTrack ? <div>Getting track...</div> : null}
+        <div>
+          <h3>{data?.name}</h3>
+          {data?.artists.map((artist) => (
+            <p key={artist.id}>{artist.name}</p>
+          ))}
+        </div>
+        <button
+          className="min-w-[150px] rounded-2xl bg-green-500 px-3 py-2 font-semibold text-white"
+          onClick={createPost}
+        >
+          Generate
+        </button>
+        {isGeneratingImage ? <div>Generating image...</div> : null}
+        {dataPost ? <div>The image was generated succesfully</div> : null}
       </main>
     </div>
   );
