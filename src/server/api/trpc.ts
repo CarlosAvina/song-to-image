@@ -1,3 +1,5 @@
+import { getAuth } from "@clerk/nextjs/server";
+
 /**
  * YOU PROBABLY DON'T NEED TO EDIT THIS FILE, UNLESS:
  * 1. You want to modify request context (see Part 1).
@@ -31,8 +33,11 @@ type CreateContextOptions = Record<string, string>;
  * @see https://create.t3.gg/en/usage/trpc#-servertrpccontextts
  */
 const createInnerTRPCContext = (_opts: CreateContextOptions) => {
+  const { spotifyAccessToken, userId } = _opts;
+
   return {
-    spotifyAccessToken: _opts?.spotifyAccessToken ?? "",
+    userId,
+    spotifyAccessToken,
     prisma,
   };
 };
@@ -44,9 +49,12 @@ const createInnerTRPCContext = (_opts: CreateContextOptions) => {
  * @see https://trpc.io/docs/context
  */
 export const createTRPCContext = async (_opts: CreateNextContextOptions) => {
-  const spotifyAccessToken = await getAccessToken(_opts.req);
+  const auth = getAuth(_opts.req);
+  const userId = auth.userId as string;
 
-  return createInnerTRPCContext({ spotifyAccessToken });
+  const spotifyAccessToken = await getAccessToken(_opts.req, userId);
+
+  return createInnerTRPCContext({ spotifyAccessToken, userId });
 };
 
 /**
