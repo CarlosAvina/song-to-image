@@ -34,7 +34,7 @@ export const postRouter = createTRPCRouter({
           where: { id: songId },
         })
         .then(async (song) => {
-          const prompt = `generate an image that represents a song called "${songName}"`;
+          const prompt = `Generate an image that represents a song called "${songName}"`;
           const post = await prisma.post.create({
             data: { userId, image: defaultImage, songId: song.id, prompt },
           });

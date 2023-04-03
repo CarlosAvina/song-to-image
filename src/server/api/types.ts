@@ -1,3 +1,9 @@
+type Images = {
+  url: string;
+  height: number;
+  width: number;
+};
+
 export type GetTrackResponseType = {
   album: {
     album_type: string;
@@ -8,13 +14,7 @@ export type GetTrackResponseType = {
     };
     href: string;
     id: string;
-    images: [
-      {
-        url: string;
-        height: number;
-        width: number;
-      }
-    ];
+    images: Images[];
     name: string;
     release_date: string;
     release_date_precision: string;
