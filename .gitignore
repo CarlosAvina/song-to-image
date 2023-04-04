@@ -42,3 +42,7 @@ yarn-error.log*
 *.tsbuildinfo
 
 .vscode
+
+# cdk
+.cdk.staging
+cdk.out

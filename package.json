@@ -2,6 +2,9 @@
   "name": "song-to-image",
   "version": "0.1.0",
   "private": true,
+  "bin": {
+    "aws-s3": "bin/aws-s3.ts"
+  },
   "scripts": {
     "build": "next build",
     "dev": "next dev",
@@ -17,6 +20,8 @@
     "@trpc/next": "^10.9.0",
     "@trpc/react-query": "^10.9.0",
     "@trpc/server": "^10.9.0",
+    "aws-cdk-lib": "^2.72.1",
+    "constructs": "^10.1.300",
     "next": "^13.2.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
